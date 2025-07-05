@@ -3,4 +3,4 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY app/main.py . 
-CMD ["python", "main.py"] # これで /app/main.py が実行される
+CMD ["python", "main.py"]
