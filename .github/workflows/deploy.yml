@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted  # ここがポイント！
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -16,11 +16,15 @@ jobs:
       - name: Build Docker image
         run: docker build -t python-docker-demo .
 
-      - name: Stop and Remove Docker Container
-        run: |
-          docker stop python-app || true
-          docker rm python-app || true
-        shell: cmd # ここでシェルをcmdに変更
+      # ここを修正
+      - name: Stop Docker Container (if exists)
+        run: docker stop python-app
+        continue-on-error: true # このステップでエラーが発生してもワークフローを続行
+
+      # ここを修正
+      - name: Remove Docker Container (if exists)
+        run: docker rm python-app
+        continue-on-error: true # このステップでエラーが発生してもワークフローを続行
 
       - name: Run Docker container
         run: docker run -d -p 8080:5000 --name python-app python-docker-demo
